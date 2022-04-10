@@ -94,15 +94,12 @@ public class StoreChartDetailController {
                         messageList.add(messageMap);
                     }
                 }
-                messageList.sort(new Comparator() {
-                    @Override
-                    public int compare(Object o1, Object o2) {
-                        HashMap obj1 = (HashMap) o1;
-                        HashMap obj2 = (HashMap) o2;
-                        Date time1 = (Date) obj1.get("time");
-                        Date time2 = (Date) obj2.get("time");
-                        return (int) (time1.getTime() - time2.getTime());
-                    }
+                messageList.sort((o1, o2) -> {
+                    HashMap obj1 = (HashMap) o1;
+                    HashMap obj2 = (HashMap) o2;
+                    Date time1 = (Date) obj1.get("time");
+                    Date time2 = (Date) obj2.get("time");
+                    return (int) (time1.getTime() - time2.getTime());
                 });
                 return  Result.ok().data("lists", messageList);
             }else {
