@@ -2,6 +2,7 @@ package com.xiaoli.clientservice.service;
 
 import com.xiaoli.clientservice.entity.StoreOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author xiaoli
  * @since 2022-03-27
  */
+@Service
 public interface StoreOrderService extends IService<StoreOrder> {
 
 }

@@ -39,7 +39,7 @@ public class CodeGenerator {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/pphelper?serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://124.220.20.209:3306/pphelper?serverTimezone=GMT%2B8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("liyu297628");
@@ -58,7 +58,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("store_member","store_member_product","store_product","store_status","store_category","store_order","store_pay_log","store_product_image");
+        strategy.setInclude("store_chart_detail");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

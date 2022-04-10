@@ -1,11 +1,12 @@
 package com.xiaoli.clientservice.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xiaoli.clientservice.entity.StoreCategory;
+import com.xiaoli.clientservice.service.StoreCategoryService;
 import com.xiaoli.commonutils.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,95 +24,97 @@ import java.util.Map;
 @RestController
 @RequestMapping("/category")
 public class StoreCategoryController {
+    @Autowired
+    private StoreCategoryService storeCategoryService;
 
     //获取所有的一届分类列表
     @GetMapping("/getCategories")
     public Result getCategories(){
-        List<Map> list = new ArrayList<>();
-        HashMap<String, Object> map1 = new HashMap<>();
-        map1.put("id","0");
-        map1.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map1.put("title","数码产品");
-        map1.put("parentId","0");
-        HashMap<String, Object> subMap10 = new HashMap<>();
-        subMap10.put("id","2323a");
-        subMap10.put("title","手机");
-        subMap10.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map1.put("subCategories",subMap10);
-        HashMap<String, Object> subMap11 = new HashMap<>();
-        subMap11.put("id","2323b");
-        subMap11.put("title","电脑");
-        subMap11.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        List<Map> list11 = new ArrayList<>();
-        HashMap<String, Object> subMap12 = new HashMap<>();
-        subMap12.put("id","2323c");
-        subMap12.put("title","相机");
-        subMap12.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map1.put("subCategories",subMap12);
-        HashMap<String, Object> subMap13 = new HashMap<>();
-        subMap13.put("id","2323d");
-        subMap13.put("title","MP4");
-        subMap13.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map1.put("subCategories",subMap13);
-        list11.add(subMap10);
-        list11.add(subMap11);
-        list11.add(subMap12);
-        list11.add(subMap13);
-        map1.put("subCategories",list11);
-        list.add(map1);
-
-        HashMap<String, Object> map2 = new HashMap<>();
-        map2.put("id","1");
-        map2.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map2.put("title","生活用品");
-        map2.put("parentId","0");
-        List<Map> list12 = new ArrayList<>();
-        map2.put("subCategories",list12);
-        list.add(map2);
-
-        HashMap<String, Object> map3 = new HashMap<>();
-        map3.put("id","2");
-        map3.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map3.put("title","服饰");
-        map3.put("parentId","0");
-        list.add(map3);
-        HashMap<String, Object> map4 = new HashMap<>();
-        map4.put("id","3");
-        map4.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map4.put("title","女士");
-        map4.put("parentId","0");
-        list.add(map4);
-        HashMap<String, Object> map5= new HashMap<>();
-        map5.put("id","4");
-        map5.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map5.put("title","男士");
-        map5.put("parentId","0");
-        list.add(map5);
-        HashMap<String, Object> map6 = new HashMap<>();
-        map6.put("id","5");
-        map6.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map6.put("title","母婴");
-        map6.put("parentId","0");
-        list.add(map6);
-        HashMap<String, Object> map9 = new HashMap<>();
-        map9.put("id","5");
-        map9.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map9.put("title","母婴");
-        map9.put("parentId","0");
-        list.add(map9);
-        HashMap<String, Object> map7 = new HashMap<>();
-        map7.put("id","5");
-        map7.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map7.put("title","母婴");
-        map7.put("parentId","0");
-        list.add(map7);
-        HashMap<String, Object> map8 = new HashMap<>();
-        map8.put("id","5");
-        map8.put("icon","https://w.wallhaven.cc/full/72/wallhaven-72q1ly.jpg");
-        map8.put("title","母婴");
-        map8.put("parentId","0");
-        list.add(map8);
-        return Result.ok().data("lists",list);
+        //获取所有的分类
+        List<StoreCategory> tempList = storeCategoryService.list(null);
+        //构造父类
+        List<HashMap<String,Object>> categoryList = new ArrayList<>();//父分类
+        for (StoreCategory category : tempList) {
+            if("0".equals(category.getParentId())) {
+                //父分类
+                HashMap<String,Object> categoryMap = new HashMap<>();
+                categoryMap.put("id", category.getId());
+                categoryMap.put("icon", category.getIcon());
+                categoryMap.put("title", category.getTitle());
+                categoryMap.put("parentId", category.getParentId());
+                categoryMap.put("subCategories", new ArrayList<>());
+                categoryList.add(categoryMap);
+            }
+        }
+        //构造子类
+        List<HashMap<String,Object>> subCategoryList = new ArrayList<>();//子分类
+        for (StoreCategory category : tempList) {
+            if(!"0".equals(category.getParentId())) {
+                //子分类
+                HashMap<String,Object> subCategoryMap = new HashMap<>();
+                subCategoryMap.put("id", category.getId());
+                subCategoryMap.put("icon", category.getIcon());
+                subCategoryMap.put("title", category.getTitle());
+                subCategoryMap.put("parentId", category.getParentId());
+                subCategoryMap.put("subCategories", new ArrayList<>());
+                subCategoryList.add(subCategoryMap);
+            }
+        }
+        //添加子类与父类关系
+        for (HashMap<String, Object> stringObjectHashMap : categoryList) {
+            List tempSubCategoryList = new ArrayList();
+            for (HashMap<String, Object> objectHashMap : subCategoryList) {
+                if(stringObjectHashMap.get("id").equals(objectHashMap.get("parentId"))){
+                    tempSubCategoryList.add(objectHashMap);
+                }
+            }
+            stringObjectHashMap.put("subCategories", tempSubCategoryList);
+        }
+        return Result.ok().data("lists",categoryList);
     }
+
+    //添加分类
+    @PostMapping("/addCategory")
+    public Result addCategory(@RequestBody StoreCategory storeCategory) {
+        //查询是否父类pid为'0',为0表示添加的是大类
+        if ("0".equals(storeCategory.getParentId())) {
+            //添加大类
+            //查询是否已经有该类
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("title", storeCategory.getTitle());
+            queryMap.put("parent_id", storeCategory.getParentId());
+            StoreCategory category = storeCategoryService.getOne(new QueryWrapper<StoreCategory>().allEq(queryMap));
+            if(category == null) {
+                //没有改大类，可以进行添加
+                boolean save = storeCategoryService.save(storeCategory);
+                if (save) {
+                    return  Result.ok();//添加大类成功
+                }
+            }
+            return Result.error();
+        }else {
+            //添加小类
+            //通过pid查询大类的数据,判断该大类下是否已经有该小类
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("title", storeCategory.getTitle());
+            queryMap.put("parent_id", storeCategory.getParentId());
+            //通过pid查询是否有该大类
+            StoreCategory category = storeCategoryService.getOne(new QueryWrapper<StoreCategory>().eq("id", storeCategory.getParentId()));
+            if(category == null) {
+                //没有该大类，拒绝添加
+                return  Result.error();
+            }
+            StoreCategory subCategory = storeCategoryService.getOne(new QueryWrapper<StoreCategory>().allEq(queryMap));
+            if(subCategory == null) {
+                //没有改小类，可以进行添加
+                boolean save = storeCategoryService.save(storeCategory);
+                if (save) {
+                    return  Result.ok();//添加大类成功
+                }
+            }
+            return Result.error();
+        }
+    }
+
 }
 
