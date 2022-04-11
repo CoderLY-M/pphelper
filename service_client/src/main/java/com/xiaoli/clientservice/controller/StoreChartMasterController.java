@@ -112,12 +112,7 @@ public class StoreChartMasterController {
             chartMemberList.add(tempChart);
 
             //获取对方id
-            String otherId = storeChartList.getAnotherId();
-            //通过对方id与自己id确定数据
-            HashMap queryMap = new HashMap<>();
-            queryMap.put("member_id",memberId);
-            queryMap.put("another_id",otherId);
-            StoreChartMaster master = storeChartMasterService.getOne(new QueryWrapper<StoreChartMaster>().allEq(queryMap));
+            StoreChartMaster master = storeChartMasterService.getById(storeChartList.getChartId());
             //通过master主表与消息所有者确定消息
             HashMap map = new HashMap<>();
             map.put("member_id", memberId);

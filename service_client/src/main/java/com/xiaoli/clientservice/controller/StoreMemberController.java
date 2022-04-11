@@ -2,14 +2,8 @@ package com.xiaoli.clientservice.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xiaoli.clientservice.entity.StoreMember;
-import com.xiaoli.clientservice.entity.StoreProduct;
-import com.xiaoli.clientservice.entity.StoreProductImage;
-import com.xiaoli.clientservice.entity.StoreStatus;
-import com.xiaoli.clientservice.service.StoreMemberService;
-import com.xiaoli.clientservice.service.StoreProductImageService;
-import com.xiaoli.clientservice.service.StoreProductService;
-import com.xiaoli.clientservice.service.StoreStatusService;
+import com.xiaoli.clientservice.entity.*;
+import com.xiaoli.clientservice.service.*;
 import com.xiaoli.commonutils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +32,8 @@ public class StoreMemberController {
     private StoreProductService storeProductService;
     @Autowired
     private StoreStatusService storeStatusService;
+    @Autowired
+    private StoreMemberWalletService storeMemberWalletService;
 
     //用户登录请求
     @PostMapping("/login")
@@ -76,7 +72,13 @@ public class StoreMemberController {
             return Result.error().code(phoneNameRep);
         }
         //注册用户
-        boolean flag = storeMemberService.save(registerMember);
+        String masterId= storeMemberService.registerUser(registerMember);
+        //查询注册用户
+        StoreMember storeMember = storeMemberService.getById(masterId);
+        //注册用户钱包
+        StoreMemberWallet storeMemberWallet = new StoreMemberWallet();
+        storeMemberWallet.setMemberId(storeMember.getId());
+        boolean flag = storeMemberWalletService.save(storeMemberWallet);
         if(flag) {
             return Result.ok();
         }else {

@@ -15,4 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface StoreMemberService extends IService<StoreMember> {
 
+    //注册用户
+    String registerUser(StoreMember storeMember);
 }

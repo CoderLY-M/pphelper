@@ -172,23 +172,22 @@ CREATE TABLE `store_category` (
 DROP TABLE IF EXISTS `store_order`;
 CREATE TABLE `store_order` (
     `id` char(19) NOT NULL COMMENT '订单id',
-    `order_no` varchar(20) NOT NULL DEFAULT '' COMMENT '订单号',
     `product_id` varchar(19) NOT NULL DEFAULT '' COMMENT '商品id',
+    `product_count` bigint(10) unsigned NOT NULL DEFAULT '0' COMMENT '商品数量',
     `product_title` varchar(100) NOT NULL DEFAULT '' COMMENT '商品名称',
     `product_cover` varchar(255) DEFAULT '' COMMENT '商品封面',
     `seller_id` char(19) NOT NULL DEFAULT '' COMMENT '卖家id',
-    `seller_name` varchar(20) NOT NULL DEFAULT '' COMMENT '卖家名称',
+    `seller_name` varchar(50) NOT NULL DEFAULT '' COMMENT '卖家名称',
     `member_id` varchar(19) NOT NULL DEFAULT '' COMMENT '会员id',
     `nick_name` varchar(50) NOT NULL DEFAULT '' COMMENT '会员昵称',
-    `phone` varchar(11) DEFAULT '' COMMENT '号码',
-    `total_fee` decimal(10,2) DEFAULT '0.01' COMMENT '订单金额（分）',
-    `pay_type` tinyint(3) DEFAULT NULL COMMENT '支付类型（1：微信 2：支付宝）',
-    `status` tinyint(3) DEFAULT NULL COMMENT '订单状态（0：未支付 1：已支付）',
+    `phone` varchar(255) DEFAULT '' COMMENT '号码',
+    `total_fee` decimal(10,2) DEFAULT '0.00' COMMENT '订单金额（分）',
+    `pay_type` tinyint(3) DEFAULT NULL COMMENT '支付类型（1：微信 2：支付宝 3:模拟支持）',
+    `status` tinyint(5) DEFAULT NULL COMMENT '订单状态（ 1：已支付 2：待发货 3：待收货 4：待评价）',
     `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
     `gmt_create` datetime NOT NULL COMMENT '创建时间',
     `gmt_modified` datetime NOT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `ux_order_no` (`order_no`),
     KEY `idx_product_id` (`product_id`),
     KEY `idx_seller_id` (`seller_id`),
     KEY `idx_member_id` (`member_id`)
@@ -270,3 +269,18 @@ CREATE TABLE `store_chart_detail` (
     KEY `idex_chart_id` (`chart_id`),
     KEY `idex_member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='聊天详情表';
+
+-- ----------------------------
+-- 钱包表
+-- ----------------------------
+DROP TABLE IF EXISTS `store_member_wallet`;
+CREATE TABLE `store_member_wallet` (
+  `id` char(19) NOT NULL COMMENT '主键',
+  `member_id` char(19) NOT NULL DEFAULT '' COMMENT '用户id',
+  `wallet` decimal(10,2) NOT NULL DEFAULT '0' COMMENT '钱包余额',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idex_member_id` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户钱包表';

@@ -18,60 +18,30 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>
- * 订单表
+ * 用户钱包表
  * </p>
  *
  * @author xiaoli
- * @since 2022-03-27
+ * @since 2022-04-11
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="StoreOrder对象", description="订单表")
+@ApiModel(value="StoreMemberWallet对象", description="用户钱包表")
 @Component
-public class StoreOrder implements Serializable {
+public class StoreMemberWallet implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "订单id")
+    @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
-    @ApiModelProperty(value = "商品id")
-    private String productId;
-
-    @ApiModelProperty(value = "商品名称")
-    private String productTitle;
-
-    @ApiModelProperty(value = "商品封面")
-    private String productCover;
-
-    @ApiModelProperty(value = "卖家id")
-    private String sellerId;
-
-    @ApiModelProperty(value = "商品数量")
-    private Long productCount;
-
-    @ApiModelProperty(value = "卖家名称")
-    private String sellerName;
-
-    @ApiModelProperty(value = "会员id")
+    @ApiModelProperty(value = "用户id")
     private String memberId;
 
-    @ApiModelProperty(value = "会员昵称")
-    private String nickName;
-
-    @ApiModelProperty(value = "号码")
-    private String phone;
-
-    @ApiModelProperty(value = "订单金额（分）")
-    private BigDecimal totalFee;
-
-    @ApiModelProperty(value = "支付类型（1：微信 2：支付宝）")
-    private Integer payType;
-
-    @ApiModelProperty(value = "订单状态（0：未支付 1：已支付）")
-    private Integer status;
+    @ApiModelProperty(value = "钱包余额")
+    private BigDecimal wallet;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     private Integer isDeleted;
